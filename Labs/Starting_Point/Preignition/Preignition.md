@@ -1,3 +1,5 @@
+![preignition_icon](https://github.com/securepadawan/Hack_The_Box/assets/66234098/18582026-f6cf-4cbb-86d9-b1e1b472c133)
+
 # About Preignition
 
 - Starting point machine
